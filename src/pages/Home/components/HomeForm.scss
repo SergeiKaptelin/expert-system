@@ -1,0 +1,14 @@
+@import '../../../styles/abstracts/variables';
+
+:local {
+  .Form {
+    width: 100%;
+
+    .Heading {
+      font-size: 24px;
+      line-height: 32px;
+      color: $astral;
+      text-align: center;
+    }
+  }
+}

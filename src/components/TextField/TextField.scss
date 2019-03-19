@@ -1,0 +1,14 @@
+@import "../../styles/abstracts/variables";
+
+:local {
+  .Wrapper {
+    .FormControl {
+      margin-bottom: 8px;
+    }
+
+    .Label,
+    .LabelFocused {
+      color: $astral-light;
+    }
+  }
+}
