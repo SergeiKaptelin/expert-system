@@ -4,7 +4,7 @@ function Node(type, sym, left, right) {
     type: type,
     sym: sym,
     left: left,
-    right: right 
+    right: right
   };
 }
 
@@ -31,8 +31,8 @@ function evaluate(ast, atomValues) {
   return (ast.type === 'atom')
     ? atomValues[ast.left]
     : operations[ast.type](
-        evaluate(ast.left, atomValues), 
-        evaluate(ast.right, atomValues));
+      evaluate(ast.left, atomValues),
+      evaluate(ast.right, atomValues));
 }
 
 function print(ast, parent) {
@@ -62,8 +62,7 @@ ast.evaluate = evaluate;
 ast.print = print;
 
 if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
-   module.exports = ast;
+  module.exports = ast;
 } else {
-   window.ast = ast;
+  window.ast = ast;
 }
-
