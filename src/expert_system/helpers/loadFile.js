@@ -16,26 +16,22 @@ const loadFile = (filename) => {
       .filter((row) => row.length);
 
     let rules = [];
-    let facts = {};
+    let initialFacts = {};
     let queries = {};
 
     state.forEach((row) => {
       if (row[0] !== "=" && row[0] !== "?") {
         rules.push({row});
       } else if (row[0] === "=") {
-        facts.row = row.substring(1);
-        const chars = facts.row.split("");
-        chars.forEach((char) => facts[char] = true);
+        initialFacts.row = row.substring(1);
       } else if (row[0] === "?") {
         queries.row = row.substring(1);
-        const chars = queries.row.split("");
-        chars.forEach((char) => queries[char] = null);
       }
     });
 
     return {
       rules,
-      facts,
+      initialFacts,
       queries,
     };
   } else {
@@ -44,6 +40,4 @@ const loadFile = (filename) => {
   }
 };
 
-export {
-  loadFile,
-};
+export default loadFile;
