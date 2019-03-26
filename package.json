@@ -32,6 +32,7 @@
     "@babel/preset-react": "^7.0.0",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "9.0.0",
+    "babel-jest": "^24.5.0",
     "babel-loader": "8.0.5",
     "babel-plugin-named-asset-import": "^0.3.1",
     "babel-preset-react-app": "^7.0.1",
@@ -46,6 +47,7 @@
     "eslint-plugin-react": "7.12.4",
     "file-loader": "2.0.0",
     "html-webpack-plugin": "4.0.0-alpha.2",
+    "jest": "^24.5.0",
     "mini-css-extract-plugin": "0.5.0",
     "optimize-css-assets-webpack-plugin": "5.0.1",
     "pnp-webpack-plugin": "1.2.1",
@@ -65,9 +67,11 @@
   "scripts": {
     "start": "BROWSER=none node scripts/start.js",
     "build": "node scripts/build.js",
+    "test": "yarn run lint && jest",
     "exec": "npx concurrently npm:compile:watch npm:lint:watch --names 'babel,eslint' -c 'bgBlue.bold,bgMagenta.bold'",
     "compile:watch": "nodemon --exec NODE_ENV=development npx babel-node ./src/expert_system/app.js $FILENAME",
-    "lint:watch": "nodemon --exec NODE_ENV=development npx eslint ./src/",
+    "lint": "NODE_ENV=development npx eslint ./src/",
+    "lint:watch": "nodemon --exec yarn run lint",
     "logic:build": "nearleyc ./src/expert_system/core/logic.ne -o ./src/expert_system/core/logic-grammer.js"
   },
   "eslintConfig": {

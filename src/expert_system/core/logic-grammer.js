@@ -1,8 +1,9 @@
 // Generated automatically by nearley, version 2.16.0
 // http://github.com/Hardmath123/nearley
+import ast from "./ast";
 (function () {
 function id(x) { return x[0]; }
- var ast = typeof window !== 'undefined' ? window.ast : require('./ast.js'); var grammar = {
+   var grammar = {
     Lexer: undefined,
     ParserRules: [
     {"name": "main", "symbols": ["_", "EXP", "_"], "postprocess": function(d) { return d[1]; }},

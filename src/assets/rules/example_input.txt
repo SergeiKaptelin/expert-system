@@ -3,7 +3,7 @@
 # shown here. spacing is not important
 
 A + B => C
-A + B + C => D
+#A + B + C => D
 
 #C           => E        # C implies E
 #A + B + C   => D        # A and B and C implies D
@@ -21,7 +21,7 @@ A + B + C => D
                         # If no facts are initially true, then a simple "=" followed
                         # by a newline is used
 
-?CD                    # Queries : What are G, V and X ?
+?C                    # Queries : What are G, V and X ?
 
 
 
