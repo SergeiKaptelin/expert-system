@@ -1,21 +1,3 @@
-const getFacts = ({rules, initialFacts, queries}) => {
-  let facts = {};
-  rules.forEach((rule) => {
-    rule.truthTable.head.forEach((item) => {
-      if (item.length === 1 && !facts[item]) {
-        facts[item] = false;
-      }
-    });
-  });
-  if (initialFacts.row.length > 0) {
-    initialFacts.row.split("").forEach((item) => facts[item] = true);
-  }
-  if (queries.row.length > 0) {
-    queries.row.split("").forEach((item) => facts[item] = null);
-  }
-  return facts;
-};
-
 /* eslint-disable no-loop-func */
 const calculate = (query, {rules, facts}) => {
   let result = null;
@@ -24,13 +6,14 @@ const calculate = (query, {rules, facts}) => {
     let solutions = rule.truthTable.body;
     const ruleFacts = getRuleFacts(rule, facts);
     for (const key in ruleFacts) {
-      if (ruleFacts.hasOwnProperty(key) && ruleFacts[key]) {
+      if (ruleFacts.hasOwnProperty(key) && ruleFacts[key] !== null) {
         solutions = solutions.filter((solution) => solution.some(({name, value}) => {
           return name === key && value === ruleFacts[key];
         }));
       }
     }
-    console.log(rule.truthTable.head[rule.truthTable.head.length - 1]);
+    console.log("last", rule.truthTable.head[rule.truthTable.head.length - 1]);
+    // console.log("solutions", solutions);
     if (solutions.length === 1) {
       console.log("in calculate: solutions.length = 1");
       result = solutions[0]
@@ -39,8 +22,18 @@ const calculate = (query, {rules, facts}) => {
       break;
     } else if (solutions.length < 1) {
       console.log("in calculate: solutions.length < 1");
+      result = "undetermined";
     } else if (solutions.length > 1) {
       console.log("in calculate: solutions.length > 1");
+      const match = solutions[0]
+        .find((item) => item.name === query)
+        .value;
+      const answers = solutions.map((solutions) => solutions.find((item) => item.name === query).value);
+      if (answers.includes(!match)) {
+        result = "undetermined";
+      } else {
+        result = match;
+      }
     }
   }
   console.log("--End Calculate--");
@@ -59,6 +52,5 @@ const getRuleFacts = (rule, facts) => {
 };
 
 export {
-  getFacts,
   calculate,
 }
