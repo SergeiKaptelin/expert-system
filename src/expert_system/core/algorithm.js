@@ -1,3 +1,10 @@
+// const printSolutions = (solutions) => {
+//   solutions.forEach((solution) => {
+//     const arr = solution.map((item) => item.value);
+//     console.log(arr);
+//   });
+// };
+
 /* eslint-disable no-loop-func */
 const calculate = (query, {rules, facts}) => {
   let result = null;
@@ -12,7 +19,9 @@ const calculate = (query, {rules, facts}) => {
         }));
       }
     }
-    console.log("last", rule.truthTable.head[rule.truthTable.head.length - 1]);
+    console.log(rule.truthTable.head);
+    // printSolutions(rule.truthTable.body);
+    // console.log("last", rule.truthTable.head[rule.truthTable.head.length - 1]);
     // console.log("solutions", solutions);
     if (solutions.length === 1) {
       console.log("in calculate: solutions.length = 1");

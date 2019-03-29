@@ -3,7 +3,8 @@ import truthTable from "../core/truth_table";
 
 const getRules = (filename) => {
   const expertSystem = loadFile(filename);
-  expertSystem.rules = addParentheses(expertSystem.rules);
+  expertSystem.rules = expertSystem.rules.map((rule) => parenthesesForConclusion(rule));
+  expertSystem.rules = expertSystem.rules.map((rule) => parenthesesForNegation(rule));
   expertSystem.rules.forEach((rule) => rule.truthTable = truthTable(rule.row));
   return expertSystem;
 };
@@ -26,17 +27,27 @@ const getFacts = ({rules, initialFacts, queries}) => {
   return facts;
 };
 
-const addParentheses = (rules) => {
-  let newRules = [];
-  rules.forEach(({row}) => {
-    const match = row.match(/<->|<=>|iff|IFF|->|=>|if|IF/g);
-    const separator = match ? match[0] : "";
-    const equations = row.split(separator);
-    newRules.push({
-      row: `${equations[0]}${separator}(${equations[1]})`,
-    });
-  });
-  return newRules;
+const parenthesesForConclusion = (rule) => {
+  const {row} = rule;
+  const match = row.match(/<->|<=>|->|=>/g);
+  const separator = match ? match[0] : "";
+  const equations = row.split(separator);
+  return {
+    ...rule,
+    row: `${equations[0]}${separator}(${equations[1]})`,
+  };
+};
+
+const parenthesesForNegation = (rule) => {
+  const {row} = rule;
+  const match = row.match(/![A-Z]/g);
+  const uniqueMatch = [...new Set(match)];
+  let newRow = row;
+  uniqueMatch.forEach((separator) => newRow = newRow.replace(new RegExp(separator, "g"), `(${separator})`));
+  return {
+    ...rule,
+    row: newRow,
+  };
 };
 
 export {
