@@ -1,32 +1,6 @@
 import loadFile from "./loadFile";
 import truthTable from "../core/truth_table";
 
-const getRules = (filename) => {
-  const expertSystem = loadFile(filename);
-  expertSystem.rules = expertSystem.rules.map((rule) => parenthesesForConclusion(rule));
-  expertSystem.rules = expertSystem.rules.map((rule) => parenthesesForNegation(rule));
-  expertSystem.rules.forEach((rule) => rule.truthTable = truthTable(rule.row));
-  return expertSystem;
-};
-
-const getFacts = ({rules, initialFacts, queries}) => {
-  let facts = {};
-  rules.forEach((rule) => {
-    rule.truthTable.head.forEach((item) => {
-      if (item.length === 1 && !facts[item]) {
-        facts[item] = false;
-      }
-    });
-  });
-  if (initialFacts.row.length > 0) {
-    initialFacts.row.split("").forEach((item) => facts[item] = true);
-  }
-  if (queries.row.length > 0) {
-    queries.row.split("").forEach((item) => facts[item] = null);
-  }
-  return facts;
-};
-
 const parenthesesForConclusion = (rule) => {
   const {row} = rule;
   const match = row.match(/<->|<=>|->|=>/g);
@@ -50,7 +24,66 @@ const parenthesesForNegation = (rule) => {
   };
 };
 
+const countAppearance = (value, doubleArr) => {
+  const appearancesArr = doubleArr.filter((variables) => variables.indexOf(value) >= 0);
+  return appearancesArr.length;
+};
+
+const getRules = (filename) => {
+  const expertSystem = loadFile(filename);
+  expertSystem.rules = expertSystem.rules.map((rule) => parenthesesForConclusion(rule));
+  expertSystem.rules = expertSystem.rules.map((rule) => parenthesesForNegation(rule));
+  expertSystem.rules.forEach((rule) => rule.truthTable = truthTable(rule.row));
+  return expertSystem;
+};
+
+const getFacts = ({rules, initialFacts, queries}) => {
+  let facts = {};
+  rules.forEach((rule) => {
+    rule.truthTable.head.forEach((item) => {
+      if (item.length === 1 && !facts[item]) {
+        facts[item] = false;
+      }
+    });
+  });
+  if (initialFacts.row.length > 0) {
+    initialFacts.row.split("").forEach((item) => facts[item] = true);
+  }
+  if (queries.row.length > 0) {
+    queries.row.split("").forEach((item) => {
+      if (initialFacts.row.indexOf(item) < 0) {
+        facts[item] = null;
+      }
+    });
+  }
+  return facts;
+};
+
+const getQueries = (expertSystem) => {
+  const {rules, initialFacts: {row}, initialQueries} = expertSystem;
+  let queries = [];
+  let possibleQueries = [];
+  let allVariables = [];
+  let variablesByRule = [];
+  rules.forEach((rule) => {
+    const variables = rule.row.match(/[A-Z]/g);
+    allVariables = [...allVariables, ...variables];
+    variablesByRule.push(variables);
+  });
+  const uniqueAllVariables = [...new Set(allVariables)];
+  uniqueAllVariables.forEach((value) => {
+    if (countAppearance(value, variablesByRule) > 1 && row.indexOf(value) < 0) {
+      possibleQueries.push(value);
+    }
+  });
+  queries = [...initialQueries.row.split(""), ...possibleQueries];
+  return {
+    row: [...new Set(queries)].join(""),
+  };
+};
+
 export {
   getRules,
   getFacts,
+  getQueries,
 };

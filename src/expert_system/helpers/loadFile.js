@@ -17,7 +17,7 @@ const loadFile = (filename) => {
 
     let rules = [];
     let initialFacts = {};
-    let queries = {};
+    let initialQueries = {};
 
     state.forEach((row) => {
       if (row[0] !== "=" && row[0] !== "?") {
@@ -25,14 +25,14 @@ const loadFile = (filename) => {
       } else if (row[0] === "=") {
         initialFacts.row = row.substring(1);
       } else if (row[0] === "?") {
-        queries.row = row.substring(1);
+        initialQueries.row = row.substring(1);
       }
     });
 
     return {
       rules,
       initialFacts,
-      queries,
+      initialQueries,
     };
   } else {
     error(FILE_NOT_EXIST, filename);
