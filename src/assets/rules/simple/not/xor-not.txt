@@ -1,4 +1,4 @@
 # Output: A = false
-A => B + !C
-=C
+!A ^ B => C ^ !D
+=BD
 ?A

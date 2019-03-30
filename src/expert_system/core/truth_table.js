@@ -57,7 +57,7 @@ function tableFromAst(ast) {
 
   const head = atomics.concat(complex).map((item) => Ast.print(item));
   var tableTrueResult = table.filter((row) => row[row.length - 1] !== false);
-
+  // console.log("head", head);
   return {
     head: head,
     body: tableTrueResult.map((row) => row.map((cell, i) => {

@@ -9,12 +9,12 @@ function Node(type, sym, left, right) {
 }
 
 var precedence = [
-  'not',
-  'and',
-  'or',
-  'xor',
-  'imply',
   'iff',
+  'imply',
+  'xor',
+  'or',
+  'and',
+  'not',
 ];
 
 var operations = {
