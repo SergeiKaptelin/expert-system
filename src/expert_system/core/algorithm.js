@@ -1,9 +1,14 @@
-// const printSolutions = (solutions) => {
-//   solutions.forEach((solution) => {
-//     const arr = solution.map((item) => item.value);
-//     console.log(arr);
-//   });
-// };
+const REPEATS = 100;
+
+const getRuleFacts = (rule, facts) => {
+  let ruleFacts = {};
+  rule.truthTable.head.forEach((item) => {
+    if (item.length === 1) {
+      ruleFacts[item] = facts[item];
+    }
+  });
+  return ruleFacts;
+};
 
 /* eslint-disable no-loop-func */
 const calculate = (query, {rules, facts}) => {
@@ -19,21 +24,14 @@ const calculate = (query, {rules, facts}) => {
         }));
       }
     }
-    console.log(rule.truthTable.head);
-    // printSolutions(rule.truthTable.body);
-    // console.log("last", rule.truthTable.head[rule.truthTable.head.length - 1]);
-    // console.log("solutions", solutions);
     if (solutions.length === 1) {
-      console.log("in calculate: solutions.length = 1");
       result = solutions[0]
         .find((item) => item.name === query)
         .value;
       break;
     } else if (solutions.length < 1) {
-      console.log("in calculate: solutions.length < 1");
       result = "undetermined";
     } else if (solutions.length > 1) {
-      console.log("in calculate: solutions.length > 1");
       const match = solutions[0]
         .find((item) => item.name === query)
         .value;
@@ -45,21 +43,40 @@ const calculate = (query, {rules, facts}) => {
       }
     }
   }
-  console.log("--End Calculate--");
   return result;
 };
 /* eslint-enable no-loop-func */
 
-const getRuleFacts = (rule, facts) => {
-  let ruleFacts = {};
-  rule.truthTable.head.forEach((item) => {
-    if (item.length === 1) {
-      ruleFacts[item] = facts[item];
+const refreshFacts = (facts) => {
+  const refreshedFacts = {};
+  for (const key in facts) {
+    if (facts.hasOwnProperty(key)) {
+      refreshedFacts[key] = facts[key] === "undetermined" ? null : facts[key];
     }
-  });
-  return ruleFacts;
+  }
+  return refreshedFacts;
+};
+
+const deepThought = (expertSystem) => {
+  let result = {};
+  let facts = Object.values(expertSystem.facts);
+  let i = 0;
+  while ((facts.indexOf("undetermined") >= 0 || facts.indexOf(null) >= 0) && i < REPEATS) {
+    expertSystem.queries.row.split("").forEach((query) => {
+      expertSystem.facts = refreshFacts(expertSystem.facts); // Do we really need that?
+      const answer = calculate(query, expertSystem);
+      expertSystem.facts[query] = answer;
+      if (expertSystem.initialQueries.row.indexOf(query) >= 0) {
+        result[query] = answer;
+      }
+    });
+    facts = Object.values(expertSystem.facts);
+    i++;
+  }
+  return result;
 };
 
 export {
   calculate,
+  deepThought,
 }

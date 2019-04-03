@@ -5,17 +5,17 @@ main -> _ EXP _ {% function(d) { return d[1]; } %}
 
 # Propositional Logic
 
-NOT     -> "!" | "not" | "NOT"
+NOT     -> "!"
 
-AND     -> "+" | "&&" | "and" | "AND"
+AND     -> "+"
 
-OR      -> "|" | "||" | "or"  | "OR"
+OR      -> "|"
 
-XOR     -> "^" | "xor" | "XOR"
+XOR     -> "^"
 
-IMPLY   -> "->" | "=>" | "if" | "IF"
+IMPLY   -> "=>"
 
-IFF     -> "<->" | "<=>" | "iff" | "IFF"
+IFF     -> "<=>"
 
 EXP -> "(" _ EXP _ ")"        {% function(d) { return d[2]; } %}
   | X_IFF_Y
