@@ -1,5 +1,5 @@
 import {createStore, compose, applyMiddleware, combineReducers} from "redux";
-// import {reducer as reduxFormReducer} from "redux-form";
+import {reducer as reduxFormReducer} from "redux-form";
 import thunk from "redux-thunk";
 
 import * as reducers from "../reducers/index";
@@ -16,9 +16,7 @@ const enhancer = compose(
 
 const reducer = combineReducers({
   ...reducers,
-  // form: reduxFormReducer.plugin({
-  //   encryptionForm: encryptionReducer,
-  // }),
+  form: reduxFormReducer,
 });
 
 const configureStore = (initialState = {}) => {

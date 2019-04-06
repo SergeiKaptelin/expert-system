@@ -1,3 +1,5 @@
+import {getFacts, getQueries, getRules} from "../helpers/utils";
+
 const REPEATS = 100;
 
 const getRuleFacts = (rule, facts) => {
@@ -58,12 +60,15 @@ const refreshFacts = (facts) => {
 };
 
 const deepThought = (expertSystem) => {
+  expertSystem.rules = getRules(expertSystem);
+  expertSystem.queries = getQueries(expertSystem);
+  expertSystem.facts = getFacts(expertSystem);
   let result = {};
   let facts = Object.values(expertSystem.facts);
   let i = 0;
   while ((facts.indexOf("undetermined") >= 0 || facts.indexOf(null) >= 0) && i < REPEATS) {
     expertSystem.queries.row.split("").forEach((query) => {
-      expertSystem.facts = refreshFacts(expertSystem.facts); // Do we really need that?
+      expertSystem.facts = refreshFacts(expertSystem.facts);
       const answer = calculate(query, expertSystem);
       expertSystem.facts[query] = answer;
       if (expertSystem.initialQueries.row.indexOf(query) >= 0) {

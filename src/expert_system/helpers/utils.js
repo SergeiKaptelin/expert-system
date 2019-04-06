@@ -1,4 +1,3 @@
-import loadFile from "./loadFile";
 import truthTable from "../core/truth_table";
 
 const parenthesesForConclusion = (rule) => {
@@ -29,12 +28,15 @@ const countAppearance = (value, doubleArr) => {
   return appearancesArr.length;
 };
 
-const getRules = (filename) => {
-  const expertSystem = loadFile(filename);
-  expertSystem.rules = expertSystem.rules.map((rule) => parenthesesForConclusion(rule));
-  expertSystem.rules = expertSystem.rules.map((rule) => parenthesesForNegation(rule));
-  expertSystem.rules.forEach((rule) => rule.truthTable = truthTable(rule.row));
-  return expertSystem;
+const getRules = (expertSystem) => {
+  let rules = [];
+  rules = expertSystem.rules.map((rule) => parenthesesForConclusion(rule));
+  rules = rules.map((rule) => parenthesesForNegation(rule));
+  rules = rules.map((rule) => {
+    rule.truthTable = truthTable(rule.row);
+    return rule;
+  });
+  return rules;
 };
 
 const getFacts = ({rules, initialFacts, queries}) => {

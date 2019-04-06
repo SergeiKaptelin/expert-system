@@ -11,4 +11,26 @@
       text-align: center;
     }
   }
+
+  .ButtonBox {
+    display: flex;
+    justify-content: center;
+
+    .Button {
+      margin-left: 16px;
+
+      &:first-child {
+        margin-left: 0;
+      }
+    }
+  }
+
+  .ConditionBox {
+    display: flex;
+    align-items: center;
+
+    .Symbol {
+      padding-top: 6px;
+    }
+  }
 }

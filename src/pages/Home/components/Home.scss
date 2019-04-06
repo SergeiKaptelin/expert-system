@@ -2,33 +2,12 @@
 
 :local {
   .MainSection {
-    background-color: $spray;
+    background-color: $white;
     min-height: 100vh;
     overflow: hidden;
     display: flex;
-    align-items: center;
     justify-content: center;
     position: relative;
-
-    &:before {
-      width: 1922px;
-      height: 1670px;
-      background-color: $riptide;
-      position: absolute;
-      display: block;
-      content: "";
-      left: 360px;
-      top: -840px;
-      border-radius: 100%;
-    }
-  }
-
-  .Card {
-    width: 90%;
-    max-width: 400px;
-    z-index: 1;
-    display: flex;
-    justify-content: center;
-    padding: 20px 40px;
+    padding: 100px 24px 0;
   }
 }

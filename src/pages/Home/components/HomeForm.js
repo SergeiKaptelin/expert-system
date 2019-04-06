@@ -1,94 +1,152 @@
-import React, {Component} from "react";
-import {reduxForm} from "redux-form";
-import Typography from "@material-ui/core/Typography";
-import InputAdornment from "@material-ui/core/InputAdornment/InputAdornment";
-import IconButton from "@material-ui/core/IconButton/IconButton";
-import classNames from "classnames";
-import {withStyles} from "@material-ui/core/styles";
+import React, {Component, Fragment} from "react";
+import PropTypes from "prop-types";
+import {Field, FieldArray, reduxForm, arrayPush} from "redux-form";
+import Grid from "@material-ui/core/Grid/Grid";
+import Button from "@material-ui/core/Button/Button";
 
+import Panel from "../../../components/Panel/Panel";
 import TextField from "../../../components/TextField/TextField";
 
 import styles from "./HomeForm.scss";
 
-const customStyles = () => ({
-  cssFocused: {},
-  cssLabel: {
-    "&$cssFocused": {
-      color: "#377185",
-    },
-  },
-  cssUnderline: {
-    "&:after": {
-      borderBottomColor: "#377185",
-    },
-  },
-});
-
 class HomeForm extends Component {
-  state = {
-    showPassword: false,
-    password: "",
-  };
+  componentDidMount() {
+    const {initialize} = this.props;
+    initialize({
+      facts: "DE",
+      queries: "A",
+      rules: [
+        {row: "B => A"},
+        {row: "D + E => B"},
+      ]
+    });
+  }
 
-  handleChange = () => (event) => {
-    this.setState({password: event.target.value});
-  };
+  uppercase = (value) => value && value.toUpperCase();
 
-  handleShowPassword = () => {
-    this.setState((state) => ({showPassword: !state.showPassword}));
-  };
-
-  drawIcon = () => {
-    const {showPassword} = this.state;
+  renderRules = ({fields}) => {
     return (
-      <InputAdornment position="end">
-        <IconButton
-          aria-label="Toggle password visibility"
-          onClick={this.handleShowPassword}
-        >
-          <i
-            className={classNames({
-              "icon-eye-close": showPassword,
-              "icon-eye": !showPassword,
-            })}
-          />
-        </IconButton>
-      </InputAdornment>
+      <Fragment>
+        {fields.map((rule, index) => (
+          <Grid
+            item
+            md={12}
+            key={index}
+          >
+            <Panel
+              hovered
+              handleClose={() => fields.remove(index)}
+            >
+              <Grid container spacing={24}>
+                <Grid item md={4}>
+                  <Field
+                    component={TextField}
+                    id={`row-input-${index}`}
+                    type="text"
+                    name={`${rule}.row`}
+                    label="Rule"
+                    normalize={this.uppercase}
+                  />
+                </Grid>
+              </Grid>
+            </Panel>
+          </Grid>
+        ))}
+      </Fragment>
     );
   };
 
   render() {
-    const {showPassword, password} = this.state;
-    const {classes} = this.props;
-
+    const {handleSubmit, submitting, dispatch, solveExpertSystemAction} = this.props;
     return (
-      <form className={styles.Form}>
-        <Typography
-          className={styles.Heading}
-          variant="h3"
-          gutterBottom
-        >
-          Encryption
-        </Typography>
-        <TextField
-          endAdornment={this.drawIcon()}
-          id="before-password"
-          type={showPassword ? "text" : "password"}
-          value={password}
-          onHandleChange={this.handleChange}
-          labelClasses={{
-            root: classes.cssLabel,
-            focused: classes.cssFocused,
-          }}
-          inputClasses={{
-            root: classes.cssUnderline,
-          }}
-        />
+      <form
+        className={styles.Form}
+        onSubmit={handleSubmit((values) => solveExpertSystemAction(values))}
+      >
+        <Grid container spacing={24}>
+          <Grid item md={3}>
+            <Grid
+              container
+              spacing={24}
+              direction="column"
+            >
+              <Grid item xs={12}>
+                <Panel>
+                  <div className={styles.ConditionBox}>
+                    <span className={styles.Symbol}>=</span>
+                    <Field
+                      component={TextField}
+                      id="facts-input"
+                      type="text"
+                      name="facts"
+                      label="Facts"
+                      normalize={this.uppercase}
+                    />
+                  </div>
+                  <div className={styles.ConditionBox}>
+                    <span className={styles.Symbol}>?</span>
+                    <Field
+                      component={TextField}
+                      id="queries-input"
+                      type="text"
+                      name="queries"
+                      label="Queries"
+                      normalize={this.uppercase}
+                    />
+                  </div>
+                </Panel>
+              </Grid>
+              <div className={styles.ButtonBox}>
+                <Button
+                  className={styles.Button}
+                  type="submit"
+                  disabled={submitting}
+                >
+                  Result
+                </Button>
+                <Button
+                  className={styles.Button}
+                  onClick={() => dispatch(arrayPush('expertSystemForm', 'rules', {}))}
+                >
+                  Add card
+                </Button>
+              </div>
+              <Grid item xs={12}>
+                <Panel>
+                  Panel 2
+                </Panel>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item md={6}>
+            <Grid
+              container
+              spacing={24}
+              direction="column"
+            >
+              <FieldArray
+                name="rules"
+                component={this.renderRules}
+              />
+            </Grid>
+          </Grid>
+          <Grid item md={3}>
+            Right
+          </Grid>
+        </Grid>
       </form>
     );
   }
 }
 
-export default withStyles(customStyles)(reduxForm({
-  form: "encryptionForm",
-})(HomeForm));
+HomeForm.propTypes = {
+  handleSubmit: PropTypes.func.isRequired,
+  dispatch: PropTypes.func.isRequired,
+  initialize: PropTypes.func.isRequired,
+  solveExpertSystemAction: PropTypes.func.isRequired,
+  submitting: PropTypes.bool.isRequired,
+};
+
+export default reduxForm({
+  form: "expertSystemForm",
+})(HomeForm);

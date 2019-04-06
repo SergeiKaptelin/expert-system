@@ -2,16 +2,14 @@ import colors from "colors";
 
 import {usage} from "./helpers/notifications";
 import {deepThought} from "./core/algorithm";
-import {getFacts, getRules, getQueries} from "./helpers/utils";
+import loadFile from "./helpers/loadFile";
 
 const {argv} = process;
 if (argv.length !== 3) {
   usage();
 }
 
-const expertSystem = getRules(argv[2]);
-expertSystem.queries = getQueries(expertSystem);
-expertSystem.facts = getFacts(expertSystem);
+const expertSystem = loadFile(argv[2]);
 const result = deepThought(expertSystem);
 
 for (const key in result) {
