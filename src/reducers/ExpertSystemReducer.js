@@ -1,4 +1,8 @@
-import {SOLVE_EXPERT_SYSTEM, SOLVE_EXPERT_SYSTEM_SUCCESS} from "../constants/ExpertSystemConstants";
+import {
+  SOLVE_EXPERT_SYSTEM,
+  SOLVE_EXPERT_SYSTEM_SUCCESS,
+  CLEAR_EXPERT_SYSTEM_RESULT,
+} from "../constants/ExpertSystemConstants";
 
 const initialState = {
   solvedData: {},
@@ -17,6 +21,11 @@ const reducer = (state = initialState, action) => {
         ...state,
         solving: false,
         solvedData: action.solvedData,
+      };
+    case CLEAR_EXPERT_SYSTEM_RESULT:
+      return {
+        ...state,
+        solvedData: {},
       };
     default:
       return {

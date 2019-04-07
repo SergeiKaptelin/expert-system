@@ -9,8 +9,9 @@ if (argv.length !== 3) {
   usage();
 }
 
-const expertSystem = loadFile(argv[2]);
-const result = deepThought(expertSystem);
+let expertSystem = loadFile(argv[2]);
+expertSystem = deepThought(expertSystem);
+const {result} = expertSystem;
 
 for (const key in result) {
   if (result.hasOwnProperty(key)) {

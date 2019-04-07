@@ -1,0 +1,40 @@
+@import "../../styles/abstracts/variables";
+
+:local {
+  .Table {
+    .Hr,
+    .Tr {
+      margin-bottom: 6px;
+
+      .Th,
+      .Td {
+        margin-right: 2px;
+        display: flex;
+
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .TrueCellDefault {
+    background-color: $fringy-flower;
+  }
+
+  .FalseCellDefault {
+    background-color: $peach-puff;
+  }
+
+  .TrueCellSolution {
+    background-color: $lime;
+  }
+
+  .FalseCellSolution {
+    background-color: $red;
+  }
+}

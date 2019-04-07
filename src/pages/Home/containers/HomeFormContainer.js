@@ -1,12 +1,14 @@
 import {connect} from "react-redux";
 
-import {solveExpertSystemAction} from "../../../actions/ExpertSystemAction";
+import {solveExpertSystemAction, clearResultAction} from "../../../actions/ExpertSystemAction";
 
 import HomeForm from "../components/HomeForm";
 
 export default connect((state) => {
-  console.log("data", state.expertSystem.solvedData);
-  return {};
+  return {
+    solvedData: state.expertSystem.solvedData,
+  };
 }, {
   solveExpertSystemAction,
+  clearResultAction,
 })(HomeForm);

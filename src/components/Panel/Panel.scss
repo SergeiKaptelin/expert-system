@@ -17,7 +17,7 @@
       height: 20px;
       width: 20px;
       border-radius: 50%;
-      background-color: $black;
+      color: $black;
       cursor: pointer;
       opacity: 0;
       transform: translate(7px, -7px);
@@ -35,5 +35,9 @@
         opacity: 1;
       }
     }
+  }
+
+  .CloseIcon {
+    font-size: 20px;
   }
 }

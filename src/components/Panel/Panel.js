@@ -12,7 +12,11 @@ const Panel = ({hovered, children, handleClose}) => {
         role="button"
         tabIndex={0}
         onClick={handleClose}
-      />
+      >
+        {hovered && (
+          <i className={classNames("icon-close", styles.CloseIcon)}/>
+        )}
+      </div>
       {children}
     </div>
   );

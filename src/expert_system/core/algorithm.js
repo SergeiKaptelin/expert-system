@@ -12,8 +12,24 @@ const getRuleFacts = (rule, facts) => {
   return ruleFacts;
 };
 
+const addSolutions = (rule, query, solutions) => {
+  if (!rule.possibleSolutions) {
+    rule.possibleSolutions = [];
+  }
+  const solutionByQuery = rule.possibleSolutions.find((item) => item.query === query);
+  if (solutionByQuery) {
+    solutionByQuery.solutions = solutions;
+  } else {
+    rule.possibleSolutions.push({
+      query: query,
+      solutions: solutions,
+    });
+  }
+};
+
 /* eslint-disable no-loop-func */
-const calculate = (query, {rules, facts}) => {
+const calculate = (query, expertSystem) => {
+  const {rules, facts} = expertSystem;
   let result = null;
   const rulesWithQuery = rules.filter((rule) => rule.truthTable.head.includes(query));
   for (const rule of rulesWithQuery) {
@@ -26,6 +42,7 @@ const calculate = (query, {rules, facts}) => {
         }));
       }
     }
+    addSolutions(rule, query, solutions);
     if (solutions.length === 1) {
       result = solutions[0]
         .find((item) => item.name === query)
@@ -78,7 +95,8 @@ const deepThought = (expertSystem) => {
     facts = Object.values(expertSystem.facts);
     i++;
   }
-  return result;
+  expertSystem.result = result;
+  return expertSystem;
 };
 
 export {

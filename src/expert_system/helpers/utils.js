@@ -2,7 +2,7 @@ import truthTable from "../core/truth_table";
 
 const parenthesesForConclusion = (rule) => {
   const {row} = rule;
-  const match = row.match(/<->|<=>|->|=>/g);
+  const match = row.match(/<->|<=>|->|=> */g);
   const separator = match ? match[0] : "";
   const equations = row.split(separator);
   return {
