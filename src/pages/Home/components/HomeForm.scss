@@ -3,12 +3,63 @@
 :local {
   .Form {
     width: 100%;
+  }
 
-    .Heading {
-      font-size: 24px;
-      line-height: 32px;
-      color: $astral;
-      text-align: center;
+  .ButtonBox {
+    display: flex;
+    justify-content: center;
+
+    .Button {
+      margin-left: 16px;
+
+      &:first-child {
+        margin-left: 0;
+      }
+    }
+  }
+
+  .ConditionBox {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .Symbol {
+      padding-top: 6px;
+    }
+  }
+
+  .Results {
+    display: flex;
+    flex-direction: column;
+
+    .ResultItem {
+      margin-bottom: 8px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .TruthTableTitleBox {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .QueriesButtonsBox {
+    .ButtonCircle {
+      min-width: 36px;
+      border-radius: 50%;
+      margin-right: 4px;
+
+      &:last-child {
+        margin-right: 0;
+      }
     }
   }
 }

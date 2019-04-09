@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import * as serviceWorker from "./serviceWorker";
 import {Provider} from "react-redux";
 
-import HomeContainer from "./pages/Home/containers/HomeContainer";
+import Home from "./pages/Home/components/Home";
 
 import configureStore from "./utils/createStore";
 
@@ -15,7 +15,7 @@ const store = configureStore(initialState);
 
 ReactDOM.render(
   <Provider store={store}>
-    <HomeContainer/>
+    <Home/>
   </Provider>,
   document.getElementById("root")
 );

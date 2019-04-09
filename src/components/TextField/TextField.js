@@ -2,13 +2,16 @@ import React, {Component} from "react";
 import PropTypes from "prop-types";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
-import MaterialInput from "@material-ui/core/Input";
+import Input from "@material-ui/core/Input";
+import FormHelperText from '@material-ui/core/FormHelperText';
 
 import styles from "./TextField.scss";
 
 class TextField extends Component {
+  trimValue = (value) => value.trim();
+
   render() {
-    const {endAdornment, id, type, value, onHandleChange, labelClasses, inputClasses} = this.props;
+    const {id, type, input, placeholder, label, meta: {error, submitFailed}} = this.props;
 
     return (
       <div className={styles.Wrapper}>
@@ -16,20 +19,23 @@ class TextField extends Component {
           fullWidth
           className={styles.FormControl}
         >
-          <InputLabel
-            htmlFor={id}
-            classes={labelClasses}
-          >
-            Before
+          <InputLabel htmlFor={id}>
+            {label}
           </InputLabel>
-          <MaterialInput
-            endAdornment={endAdornment}
+          <Input
             id={id}
+            onChange={input.onChange}
+            onBlur={() => input.onChange(this.trimValue(input.value))}
+            value={input.value}
+            name={input.name}
             type={type}
-            value={value}
-            onChange={onHandleChange()}
-            classes={inputClasses}
+            placeholder={placeholder}
           />
+          {submitFailed && error && (
+            <FormHelperText>
+              {error}
+            </FormHelperText>
+          )}
         </FormControl>
       </div>
     );
@@ -37,23 +43,30 @@ class TextField extends Component {
 }
 
 TextField.propTypes = {
-  endAdornment: PropTypes.node,
   id: PropTypes.string,
-  inputClasses: PropTypes.object,
-  labelClasses: PropTypes.object,
-  onHandleChange: PropTypes.func,
+  input: PropTypes.object.isRequired,
+  label: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.node,
+  ]),
+  placeholder: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.node,
+  ]),
+  meta: PropTypes.shape({
+    submitFailed: PropTypes.bool,
+    error: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.array,
+      PropTypes.node,
+    ]),
+  }).isRequired,
   type: PropTypes.string,
-  value: PropTypes.string,
 };
 
 TextField.defaultProps = {
-  endAdornment: null,
   id: null,
-  inputClasses: null,
-  labelClasses: null,
-  onHandleChange: () => false,
   type: "text",
-  value: "",
 };
 
 export default TextField;

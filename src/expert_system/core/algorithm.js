@@ -1,3 +1,5 @@
+import {getFacts, getQueries, getRules} from "../helpers/utils";
+
 const REPEATS = 100;
 
 const getRuleFacts = (rule, facts) => {
@@ -10,8 +12,24 @@ const getRuleFacts = (rule, facts) => {
   return ruleFacts;
 };
 
+const addSolutions = (rule, query, solutions) => {
+  if (!rule.possibleSolutions) {
+    rule.possibleSolutions = [];
+  }
+  const solutionByQuery = rule.possibleSolutions.find((item) => item.query === query);
+  if (solutionByQuery) {
+    solutionByQuery.solutions = solutions;
+  } else {
+    rule.possibleSolutions.push({
+      query: query,
+      solutions: solutions,
+    });
+  }
+};
+
 /* eslint-disable no-loop-func */
-const calculate = (query, {rules, facts}) => {
+const calculate = (query, expertSystem) => {
+  const {rules, facts} = expertSystem;
   let result = null;
   const rulesWithQuery = rules.filter((rule) => rule.truthTable.head.includes(query));
   for (const rule of rulesWithQuery) {
@@ -24,6 +42,7 @@ const calculate = (query, {rules, facts}) => {
         }));
       }
     }
+    addSolutions(rule, query, solutions);
     if (solutions.length === 1) {
       result = solutions[0]
         .find((item) => item.name === query)
@@ -58,12 +77,15 @@ const refreshFacts = (facts) => {
 };
 
 const deepThought = (expertSystem) => {
+  expertSystem.rules = getRules(expertSystem);
+  expertSystem.queries = getQueries(expertSystem);
+  expertSystem.facts = getFacts(expertSystem);
   let result = {};
   let facts = Object.values(expertSystem.facts);
   let i = 0;
   while ((facts.indexOf("undetermined") >= 0 || facts.indexOf(null) >= 0) && i < REPEATS) {
     expertSystem.queries.row.split("").forEach((query) => {
-      expertSystem.facts = refreshFacts(expertSystem.facts); // Do we really need that?
+      expertSystem.facts = refreshFacts(expertSystem.facts);
       const answer = calculate(query, expertSystem);
       expertSystem.facts[query] = answer;
       if (expertSystem.initialQueries.row.indexOf(query) >= 0) {
@@ -73,7 +95,8 @@ const deepThought = (expertSystem) => {
     facts = Object.values(expertSystem.facts);
     i++;
   }
-  return result;
+  expertSystem.result = result;
+  return expertSystem;
 };
 
 export {

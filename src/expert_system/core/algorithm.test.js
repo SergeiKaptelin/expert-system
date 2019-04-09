@@ -1,5 +1,6 @@
 import {getRules} from "../helpers/utils";
 import {calculate} from "../core/algorithm";
+import loadFile from "../helpers/loadFile";
 
 describe("Algorithm", () => {
   describe("when simple data", () => {
@@ -8,7 +9,8 @@ describe("Algorithm", () => {
         let expertSystem;
 
         beforeEach(() => {
-          expertSystem = getRules("./src/assets/rules/simple/and/single-conclusion.txt");
+          expertSystem = loadFile("./src/assets/rules/simple/and/single-conclusion.txt");
+          expertSystem.rules = getRules(expertSystem);
         });
 
         test("? + true => true", () => {
@@ -46,7 +48,8 @@ describe("Algorithm", () => {
         let expertSystem;
 
         beforeEach(() => {
-          expertSystem = getRules("./src/assets/rules/simple/and/single-condition.txt");
+          expertSystem = loadFile("./src/assets/rules/simple/and/single-condition.txt");
+          expertSystem.rules = getRules(expertSystem);
         });
 
         test("? => true + true", () => {
@@ -174,7 +177,8 @@ describe("Algorithm", () => {
         let expertSystem;
 
         beforeEach(() => {
-          expertSystem = getRules("./src/assets/rules/simple/and/both.txt");
+          expertSystem = loadFile("./src/assets/rules/simple/and/both.txt");
+          expertSystem.rules = getRules(expertSystem);
         });
 
         test("? + true => false + true", () => {
@@ -228,7 +232,8 @@ describe("Algorithm", () => {
         let expertSystem;
 
         beforeEach(() => {
-          expertSystem = getRules("./src/assets/rules/simple/or/single-conclusion.txt");
+          expertSystem = loadFile("./src/assets/rules/simple/or/single-conclusion.txt");
+          expertSystem.rules = getRules(expertSystem);
         });
 
         test("? | true => true", () => {
@@ -266,7 +271,8 @@ describe("Algorithm", () => {
         let expertSystem;
 
         beforeEach(() => {
-          expertSystem = getRules("./src/assets/rules/simple/or/single-condition.txt");
+          expertSystem = loadFile("./src/assets/rules/simple/or/single-condition.txt");
+          expertSystem.rules = getRules(expertSystem);
         });
 
         test("? => true | false", () => {
@@ -304,7 +310,8 @@ describe("Algorithm", () => {
         let expertSystem;
 
         beforeEach(() => {
-          expertSystem = getRules("./src/assets/rules/simple/or/both.txt");
+          expertSystem = loadFile("./src/assets/rules/simple/or/both.txt");
+          expertSystem.rules = getRules(expertSystem);
         });
 
         test("? | true => true | false", () => {
@@ -358,7 +365,8 @@ describe("Algorithm", () => {
         let expertSystem;
 
         beforeEach(() => {
-          expertSystem = getRules("./src/assets/rules/simple/xor/single-conclusion.txt");
+          expertSystem = loadFile("./src/assets/rules/simple/xor/single-conclusion.txt");
+          expertSystem.rules = getRules(expertSystem);
         });
 
         test("? ^ true => true", () => {
@@ -396,7 +404,8 @@ describe("Algorithm", () => {
         let expertSystem;
 
         beforeEach(() => {
-          expertSystem = getRules("./src/assets/rules/simple/xor/single-condition.txt");
+          expertSystem = loadFile("./src/assets/rules/simple/xor/single-condition.txt");
+          expertSystem.rules = getRules(expertSystem);
         });
 
         test("? => true ^ false", () => {
@@ -434,7 +443,8 @@ describe("Algorithm", () => {
         let expertSystem;
 
         beforeEach(() => {
-          expertSystem = getRules("./src/assets/rules/simple/xor/both.txt");
+          expertSystem = loadFile("./src/assets/rules/simple/xor/both.txt");
+          expertSystem.rules = getRules(expertSystem);
         });
 
         test("? ^ true => true ^ false", () => {
@@ -488,7 +498,8 @@ describe("Algorithm", () => {
         let expertSystem;
 
         beforeEach(() => {
-          expertSystem = getRules("./src/assets/rules/simple/not/just-not.txt");
+          expertSystem = loadFile("./src/assets/rules/simple/not/just-not.txt");
+          expertSystem.rules = getRules(expertSystem);
         });
 
         test("!false => ?", () => {
@@ -514,7 +525,8 @@ describe("Algorithm", () => {
         let expertSystem;
 
         beforeEach(() => {
-          expertSystem = getRules("./src/assets/rules/simple/not/and-not.txt");
+          expertSystem = loadFile("./src/assets/rules/simple/not/and-not.txt");
+          expertSystem.rules = getRules(expertSystem);
         });
 
         test("!? + true => false + !true", () => {
@@ -566,7 +578,8 @@ describe("Algorithm", () => {
         let expertSystem;
 
         beforeEach(() => {
-          expertSystem = getRules("./src/assets/rules/simple/not/or-not.txt");
+          expertSystem = loadFile("./src/assets/rules/simple/not/or-not.txt");
+          expertSystem.rules = getRules(expertSystem);
         });
 
         test("!? | true => false | !true", () => {
@@ -618,7 +631,8 @@ describe("Algorithm", () => {
         let expertSystem;
 
         beforeEach(() => {
-          expertSystem = getRules("./src/assets/rules/simple/not/xor-not.txt");
+          expertSystem = loadFile("./src/assets/rules/simple/not/xor-not.txt");
+          expertSystem.rules = getRules(expertSystem);
         });
 
         test("!? | true => false | !true", () => {
@@ -672,7 +686,8 @@ describe("Algorithm", () => {
         let expertSystem;
 
         beforeEach(() => {
-          expertSystem = getRules("./src/assets/rules/simple/iff/and.txt");
+          expertSystem = loadFile("./src/assets/rules/simple/iff/and.txt");
+          expertSystem.rules = getRules(expertSystem);
         });
 
         test("? + true <=> false + true", () => {
@@ -724,7 +739,8 @@ describe("Algorithm", () => {
         let expertSystem;
 
         beforeEach(() => {
-          expertSystem = getRules("./src/assets/rules/simple/iff/or.txt");
+          expertSystem = loadFile("./src/assets/rules/simple/iff/or.txt");
+          expertSystem.rules = getRules(expertSystem);
         });
 
         test("? | true <=> false | true", () => {
@@ -776,7 +792,8 @@ describe("Algorithm", () => {
         let expertSystem;
 
         beforeEach(() => {
-          expertSystem = getRules("./src/assets/rules/simple/iff/xor.txt");
+          expertSystem = loadFile("./src/assets/rules/simple/iff/xor.txt");
+          expertSystem.rules = getRules(expertSystem);
         });
 
         test("? ^ true <=> false ^ true", () => {
@@ -828,7 +845,8 @@ describe("Algorithm", () => {
         let expertSystem;
 
         beforeEach(() => {
-          expertSystem = getRules("./src/assets/rules/simple/iff/not.txt");
+          expertSystem = loadFile("./src/assets/rules/simple/iff/not.txt");
+          expertSystem.rules = getRules(expertSystem);
         });
 
         test("!? + !true <=> !false ^ !true", () => {
