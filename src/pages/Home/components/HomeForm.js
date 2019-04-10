@@ -1,22 +1,19 @@
-import React, {Component, Fragment} from "react";
+import React, {Component} from "react";
 import PropTypes from "prop-types";
 import {Field, FieldArray, reduxForm, arrayPush} from "redux-form";
 import Grid from "@material-ui/core/Grid/Grid";
 import Button from "@material-ui/core/Button/Button";
-import Typography from '@material-ui/core/Typography';
 
 import Panel from "../../../components/Panel/Panel";
 import TextField from "../../../components/TextField/TextField";
-import TruthTable from "../../../components/TruthTable/TruthTable";
 import Info from "./Info";
+import RuleFields from "./RuleFields";
+
+import {validateExpertSystemForm} from "../../../utils/formUtils";
 
 import styles from "./HomeForm.scss";
 
 class HomeForm extends Component {
-  state = {
-    queriesByRule: [],
-  };
-
   componentDidMount() {
     const {initialize} = this.props;
     initialize({
@@ -29,37 +26,15 @@ class HomeForm extends Component {
     });
   }
 
-  componentDidUpdate(prevProps) {
-    const {solvedData} = this.props;
-    if (Object.entries(solvedData).length !== 0 && JSON.stringify(solvedData) !== JSON.stringify(prevProps.solvedData)) {
-      this.setState({
-        queriesByRule: solvedData.rules.map((rule) => {
-          if (rule.possibleSolutions) {
-            return rule.possibleSolutions[0].query;
-          }
-          return null;
-        }),
-      });
-    }
-  }
-
   handleAddCard = () => {
     const {dispatch, clearResultAction} = this.props;
     clearResultAction()
       .then(dispatch(arrayPush('expertSystemForm', 'rules', {})));
   };
 
-  handleChangeQueryByRule = (query, index) => {
-    const {queriesByRule} = this.state;
-    let newQueriesByRule = [...queriesByRule];
-    newQueriesByRule[index] = query;
-    this.setState({
-      queriesByRule: newQueriesByRule,
-      pressedQuery: query,
-    });
+  onlyUppercase = (value, previousValue) => {
+    return value && /([a-z]|[A-Z])/.test(value[value.length - 1]) ? value.toUpperCase() : previousValue;
   };
-
-  uppercase = (value) => value && value.toUpperCase();
 
   drawResult = (result) => {
     let resultNodes = [];
@@ -77,67 +52,8 @@ class HomeForm extends Component {
     return resultNodes;
   };
 
-  renderRules = (fields) => {
-    const {solvedData} = this.props;
-    const {queriesByRule} = this.state;
-    const solvedDataPresents = Object.entries(solvedData).length !== 0;
-    return (
-      <Fragment>
-        {fields.map((rule, index) => (
-          <Grid
-            item
-            md={12}
-            key={index}
-          >
-            <Panel
-              hovered
-              handleClose={() => fields.remove(index)}
-            >
-              <Grid container spacing={24}>
-                <Grid item md={4}>
-                  <Field
-                    component={TextField}
-                    id={`row-input-${index}`}
-                    type="text"
-                    name={`${rule}.row`}
-                    label="Rule"
-                    normalize={this.uppercase}
-                  />
-                </Grid>
-                {solvedDataPresents && (
-                  <Grid item md={8}>
-                    <div className={styles.TruthTableTitleBox}>
-                      <Typography variant="h6">
-                        Truth Table
-                      </Typography>
-                      <div className={styles.QueriesButtonsBox}>
-                        {solvedData.rules[index].possibleSolutions && solvedData.rules[index].possibleSolutions.map((item, i) => (
-                          <Button
-                            key={i}
-                            className={styles.ButtonCircle}
-                            onClick={() => this.handleChangeQueryByRule(item.query, index)}
-                          >
-                            {item.query}
-                          </Button>
-                        ))}
-                      </div>
-                    </div>
-                    <TruthTable
-                      rule={solvedData.rules[index]}
-                      query={queriesByRule[index]}
-                    />
-                  </Grid>
-                )}
-              </Grid>
-            </Panel>
-          </Grid>
-        ))}
-      </Fragment>
-    );
-  };
-
   render() {
-    const {handleSubmit, submitting, solveExpertSystemAction, solvedData} = this.props;
+    const {handleSubmit, submitting, solveExpertSystemAction, solvedData, currentRules, clearResultAction} = this.props;
     const solvedDataPresents = Object.entries(solvedData).length !== 0;
     return (
       <form
@@ -157,22 +73,20 @@ class HomeForm extends Component {
                     <span className={styles.Symbol}>=</span>
                     <Field
                       component={TextField}
-                      id="facts-input"
                       type="text"
                       name="facts"
                       label="Facts"
-                      normalize={this.uppercase}
+                      normalize={this.onlyUppercase}
                     />
                   </div>
                   <div className={styles.ConditionBox}>
                     <span className={styles.Symbol}>?</span>
                     <Field
                       component={TextField}
-                      id="queries-input"
                       type="text"
                       name="queries"
                       label="Queries"
-                      normalize={this.uppercase}
+                      normalize={this.onlyUppercase}
                     />
                   </div>
                 </Panel>
@@ -180,8 +94,15 @@ class HomeForm extends Component {
               <div className={styles.ButtonBox}>
                 <Button
                   className={styles.Button}
+                  disabled={!solvedDataPresents}
+                  onClick={clearResultAction}
+                >
+                  Clear
+                </Button>
+                <Button
+                  className={styles.Button}
                   type="submit"
-                  disabled={submitting}
+                  disabled={submitting || currentRules.length === 0}
                 >
                   Result
                 </Button>
@@ -211,7 +132,9 @@ class HomeForm extends Component {
             >
               <FieldArray
                 name="rules"
-                component={({fields}) => this.renderRules(fields)}
+                component={RuleFields}
+                solvedData={solvedData}
+                clearResultAction={clearResultAction}
               />
             </Grid>
           </Grid>
@@ -226,6 +149,7 @@ class HomeForm extends Component {
 
 HomeForm.propTypes = {
   clearResultAction: PropTypes.func.isRequired,
+  currentRules: PropTypes.array,
   dispatch: PropTypes.func.isRequired,
   initialize: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
@@ -236,8 +160,10 @@ HomeForm.propTypes = {
 
 HomeForm.defaultProps = {
   solvedData: undefined,
+  currentRules: [],
 };
 
 export default reduxForm({
   form: "expertSystemForm",
+  validate: validateExpertSystemForm,
 })(HomeForm);

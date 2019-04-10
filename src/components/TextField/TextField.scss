@@ -12,5 +12,10 @@
     .LabelFocused {
       color: $astral-light;
     }
+
+    .HintError,
+    .LabelError {
+      color: $red-orange;
+    }
   }
 }

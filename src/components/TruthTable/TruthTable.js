@@ -22,6 +22,7 @@ const TruthTable = ({rule, query}) => {
         container
         spacing={8}
         className={styles.Hr}
+        alignItems="center"
       >
         {rule.truthTable.head.map((item, index) => (
           <Grid

@@ -1,6 +1,6 @@
 import React, {Fragment} from "react";
-import Typography from '@material-ui/core/Typography';
-import Tooltip from '@material-ui/core/Tooltip';
+import Typography from "@material-ui/core/Typography";
+import Tooltip from "@material-ui/core/Tooltip";
 import className from "classnames";
 
 import HomeFormContainer from "../containers/HomeFormContainer";
