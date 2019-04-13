@@ -1,7 +1,6 @@
 import {errorMessages} from "../expert_system/helpers/notifications";
 
 import {
-  SYMBOLS,
   NOT_ALLOWED_CHAR,
   BAD_RULE_FORMATTING,
   BAD_SYMBOL_NUMBER,
@@ -11,6 +10,13 @@ import {
   BRACKET_AND_LETTER,
   RULE_START_WITH_SIGN,
   RULE_END_WITH_SIGN,
+  NO_SPACE_AFTER_SIGN,
+  NO_SIGN_BEFORE_EXCLAMATION,
+  BAD_OPERATION,
+  MULTIPLE_SIGNS,
+  MULTIPLE_EXCLAMATION,
+  BAD_BRACKETS_POSITION,
+  EXCLAMATION_WITH_BRACKETS,
 } from "../expert_system/constants/constants";
 
 /* eslint-disable no-useless-escape */
@@ -19,8 +25,6 @@ const allowedChar = (char) => /[A-Z()!\+\|\^\ <=>]/.test(char);
 const countChar = (str, regex) => str.replace(new RegExp(regex, "g"), "").length;
 
 const ruleStructure = (str) => str && /^[A-Z()!\+\|\^\ ]+(=>|<=>)[A-Z()!\+\|\^\ ]+$/.test(str);
-
-/* eslint-enable no-useless-escape */
 
 const validateStructure = (row, ruleErrors, rulesArrayErrors, ruleIndex) => {
   if (!ruleStructure(row)) {
@@ -64,7 +68,7 @@ const checkLetters = (row, ruleErrors, rulesArrayErrors, ruleIndex) => {
     ruleErrors.row = errorMessages(BRACKET_AND_LETTER);
     rulesArrayErrors[ruleIndex] = ruleErrors;
   }
-  if (/^\ *[!\+\|\^]\ *[A-Z]/g.test(row)) {
+  if (/^\ *[+\|\^]\ *[A-Z]/g.test(row)) {
     ruleErrors.row = errorMessages(RULE_START_WITH_SIGN);
     rulesArrayErrors[ruleIndex] = ruleErrors;
   }
@@ -73,6 +77,43 @@ const checkLetters = (row, ruleErrors, rulesArrayErrors, ruleIndex) => {
     rulesArrayErrors[ruleIndex] = ruleErrors;
   }
 };
+
+const checkSymbols = (row, ruleErrors, rulesArrayErrors, ruleIndex) => {
+  if (/! +[A-Z]/g.test(row)) {
+    ruleErrors.row = errorMessages(NO_SPACE_AFTER_SIGN);
+    rulesArrayErrors[ruleIndex] = ruleErrors;
+  }
+  if (/[A-Z]\ *![A-Z]/g.test(row)) {
+    ruleErrors.row = errorMessages(NO_SIGN_BEFORE_EXCLAMATION);
+    rulesArrayErrors[ruleIndex] = ruleErrors;
+  }
+  if (/[!\+\|\^]\ *=|=[!\+\|\^\ ]/g.test(row)) {
+    ruleErrors.row = errorMessages(BAD_OPERATION);
+    rulesArrayErrors[ruleIndex] = ruleErrors;
+  }
+  const trimmedRow = row.split(" ").join("");
+  if (/[!\+\|\^][+\|\^]/g.test(trimmedRow)) {
+    ruleErrors.row = errorMessages(MULTIPLE_SIGNS);
+    rulesArrayErrors[ruleIndex] = ruleErrors;
+  }
+  if (/!!/g.test(trimmedRow)) {
+    ruleErrors.row = errorMessages(MULTIPLE_EXCLAMATION);
+    rulesArrayErrors[ruleIndex] = ruleErrors;
+  }
+  if (/\)\(/g.test(trimmedRow)) {
+    ruleErrors.row = errorMessages(BAD_BRACKETS_POSITION, "')('");
+    rulesArrayErrors[ruleIndex] = ruleErrors;
+  }
+  if (/\(\)/g.test(trimmedRow)) {
+    ruleErrors.row = errorMessages(BAD_BRACKETS_POSITION, "'()'");
+    rulesArrayErrors[ruleIndex] = ruleErrors;
+  }
+  if (/!\(|\)!/g.test(trimmedRow)) {
+    ruleErrors.row = errorMessages(EXCLAMATION_WITH_BRACKETS);
+    rulesArrayErrors[ruleIndex] = ruleErrors;
+  }
+};
+/* eslint-enable no-useless-escape */
 
 const validateExpertSystemForm = (values) => {
   const errors = {};
@@ -104,6 +145,7 @@ const validateExpertSystemForm = (values) => {
         validateStructure(rule.row, ruleErrors, rulesArrayErrors, ruleIndex);
         validateBrackets(rule.row, ruleErrors, rulesArrayErrors, ruleIndex);
         checkLetters(rule.row, ruleErrors, rulesArrayErrors, ruleIndex);
+        checkSymbols(rule.row, ruleErrors, rulesArrayErrors, ruleIndex);
       }
     });
     if (rulesArrayErrors.length) {

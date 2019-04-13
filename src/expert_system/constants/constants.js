@@ -8,38 +8,14 @@ export const LETTER_AND_BRACKET = "LETTER_AND_BRACKET";
 export const BRACKET_AND_LETTER = "BRACKET_AND_LETTER";
 export const RULE_START_WITH_SIGN = "RULE_START_WITH_SIGN";
 export const RULE_END_WITH_SIGN = "RULE_END_WITH_SIGN";
-
-/* eslint-disable no-useless-escape */
-export const SYMBOLS = [
-  {
-    key: "left-bracket",
-    regex: /[^(]/,
-    value: "("
-  },
-  {
-    key: "right-bracket",
-    regex: /[^)]/,
-    value: ")"
-  },
-  {
-    key: "exclamation-mark",
-    regex: /[^!]/,
-    value: "!"
-  },
-  {
-    key: "plus",
-    regex: /[^\+]/,
-    value: "+"
-  },
-  {
-    key: "pipe",
-    regex: /[^\|]/,
-    value: "|"
-  },
-  {
-    key: "xor",
-    regex: /[^\^]/,
-    value: "^"
-  },
-];
-/* eslint-enable no-useless-escape */
+export const NO_SPACE_AFTER_SIGN = "NO_SPACE_AFTER_SIGN";
+export const NO_SIGN_BEFORE_EXCLAMATION = "NO_SIGN_BEFORE_EXCLAMATION";
+export const BAD_OPERATION = "BAD_OPERATION";
+export const MULTIPLE_SIGNS = "MULTIPLE_SIGNS";
+export const MULTIPLE_EXCLAMATION = "MULTIPLE_EXCLAMATION";
+export const BAD_BRACKETS_POSITION = "BAD_BRACKETS_POSITION";
+export const EXCLAMATION_WITH_BRACKETS = "EXCLAMATION_WITH_BRACKETS";
+export const EMPTY_RULES = "EMPTY_RULES";
+export const EMPTY_QUERIES = "EMPTY_QUERIES";
+export const BAD_FACTS_COUNTER = "BAD_FACTS_COUNTER";
+export const BAD_QUERIES_COUNTER = "BAD_QUERIES_COUNTER";
