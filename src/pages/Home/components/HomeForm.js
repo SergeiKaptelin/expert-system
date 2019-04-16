@@ -33,6 +33,9 @@ class HomeForm extends Component {
   };
 
   onlyUppercase = (value, previousValue) => {
+      if (value.length === 0) {
+        return value;
+      }
     return value && /([a-z]|[A-Z])/.test(value[value.length - 1]) ? value.toUpperCase() : previousValue;
   };
 
