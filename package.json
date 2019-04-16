@@ -27,6 +27,7 @@
     "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
+    "@babel/cli": "^7.4.3",
     "@babel/core": "^7.3.4",
     "@babel/plugin-proposal-class-properties": "^7.4.0",
     "@babel/plugin-transform-modules-commonjs": "^7.4.3",
@@ -71,6 +72,7 @@
     "build": "node scripts/build.js",
     "test": "yarn run lint && jest",
     "exec": "npx concurrently npm:compile:watch npm:lint:watch --names 'babel,eslint' -c 'bgBlue.bold,bgMagenta.bold'",
+    "compile": "npx babel ./src -d ./dist",
     "compile:watch": "nodemon --exec NODE_ENV=development npx babel-node ./src/expert_system/app.js $FILENAME",
     "lint": "NODE_ENV=development npx eslint ./src/",
     "lint:watch": "nodemon --exec yarn run lint",
